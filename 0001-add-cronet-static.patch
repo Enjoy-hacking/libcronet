@@ -1,0 +1,47 @@
+From 84cf96a3d1884749157eb770de64b544519a1cae Mon Sep 17 00:00:00 2001
+From: Binary Craft <elliot.huang.signed@gmail.com>
+Date: Tue, 14 Feb 2023 13:07:54 +0800
+Subject: [PATCH] add cronet static
+
+---
+ components/cronet/BUILD.gn | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/components/cronet/BUILD.gn b/components/cronet/BUILD.gn
+index a5a8c14..555d746 100644
+--- a/components/cronet/BUILD.gn
++++ b/components/cronet/BUILD.gn
+@@ -105,6 +105,30 @@ if (is_android) {
+     deps = [ "//components/cronet/ios:cronet_package_ios" ]
+   }
+ } else {
++  static_library("cronet_static") {
++    deps = [
++      "//base",
++      "//components/cronet:cronet_common",
++      "//components/cronet/native:cronet_native_impl",
++      "//net",
++    ]
++
++    if (use_custom_libcxx) {
++      deps += [
++        # Add shared_library_deps to include custom libc++ into dependencies.
++        # They are by default only added to executable(), loadable_module(), and
++        # shared_library() targets, but cronet_static_complete library needs it as well to
++        # avoid linking with different versions of libc++.
++        "//build/config:shared_library_deps",
++      ]
++    }
++
++    sources = [ "cronet_global_state_stubs.cc" ]
++
++    complete_static_lib = true
++    configs -= [ "//build/config/compiler:thin_archive" ]
++  }
++
+   config("shared_library_public_config") {
+     if (is_mac && !is_component_build) {
+       # Executable targets that depend on the shared libraries below need to have
+-- 
+2.39.1
+
