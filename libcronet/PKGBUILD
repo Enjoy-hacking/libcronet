@@ -7,7 +7,8 @@ pkgdesc="Cronet is the networking stack of Chromium put into a library for use o
 arch=('x86_64')
 url="https://www.chromium.org/Home"
 license=('BSD')
-makedepends=('python' 'gn' 'ninja' 'clang' 'lld' 'git')
+depends=('nss' 'libgcrypt')
+makedepends=('python' 'gn' 'ninja' 'clang' 'lld' 'git' 'mesa')
 options=('!lto') # Chromium adds its own flags for ThinLTO
 source=(
   https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
@@ -46,24 +47,60 @@ build() {
     'clang_use_chrome_plugins=false'
     'is_official_build=true' # implies is_cfi=true on x86_64
     'symbol_level=0' # sufficient for backtraces on x86(_64)
-    #'chrome_pgo_phase=0' # needs newer clang to read the bundled PGO profile
+    'exclude_unwind_tables=true'
+    'enable_resource_allowlist_generation=false'
     'treat_warnings_as_errors=false'
     'disable_fieldtrial_testing_config=true'
-    'blink_enable_generated_code_formatting=false'
-    'ffmpeg_branding="Chrome"'
+    #'blink_enable_generated_code_formatting=false'
+    #'ffmpeg_branding="Chrome"'
     'proprietary_codecs=false'
     'rtc_use_pipewire=false'
     'link_pulseaudio=false'
     'use_custom_libcxx=true'
     'use_gnome_keyring=false'
     'use_sysroot=false'
-    'use_system_libffi=false'
+    #'use_system_libffi=false'
     'enable_hangout_services_extension=false'
     'enable_widevine=false'
     'enable_nacl=false'
     'use_xkbcommon=false' 
-    'use_gtk=false' 
     'use_qt=false'
+    'use_egl=false'
+
+    'use_cups=false'
+    'use_vaapi=false'
+    'rtc_use_pipewire=false'
+    'ozone_auto_platforms=false'
+    'ozone_platform_headless=true'
+    "ozone_platform=\"headless\""
+    'use_pangocairo=false'
+    'use_alsa=false'
+    'use_libpci=false'
+    'enable_print_preview=false'
+    'enable_remoting=false'
+
+    'is_clang=true'
+
+    'fatal_linker_warnings=false'
+    'treat_warnings_as_errors=false'
+
+    'use_system_libdrm=false'
+    #'enable_base_tracing=false'
+    'use_udev=false'
+    #'use_aura=false'
+    #'use_ozone=false'
+    'use_gio=false'
+    'use_gtk=false'
+    'icu_use_data_file=false'
+    'use_glib=false'
+
+    'disable_file_support=true'
+    'enable_websockets=false'
+    'use_kerberos=false'
+    'enable_mdns=false'
+    'enable_reporting=false'
+    'include_transport_security_state_preload_list=false'
+    #'use_nss_certs=false'
     "google_api_key=\"$_google_api_key\""
   )
 
@@ -95,14 +132,14 @@ build() {
   CXXFLAGS=${CXXFLAGS/-Wp,-D_GLIBCXX_ASSERTIONS}
 
   gn gen out/Cronet --args="${_flags[*]}" --export-compile-commands
-  ninja -C out/Cronet cronet_static
+  ninja -C out/Cronet cronet_package
 }
 
 package() {
   cd chromium-$pkgver
 
-  install -D out/Cronet/obj/components/cronet/libcronet_static.a \
-    "$pkgdir/usr/lib/libcronet_static.a"
+  install -D out/Cronet/libcronet.$pkgver.so \
+    "$pkgdir/usr/lib/libcronet.so"
   install -D components/cronet/native/generated/cronet.idl_c.h \
     "$pkgdir/usr/include/cronet/cronet.idl_c.h" 
   install -D components/cronet/native/include/cronet_c.h \
