@@ -7,8 +7,7 @@ echo 'nobody ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers
 
 git clone https://aur.archlinux.org/yay.git
 pacman -S go --noconfirm
-chown -R nobody yay
-chown -R nobody /.cache
+chown -R nobody /
 pushd yay
 sudo -u nobody makepkg -cri
 popd
