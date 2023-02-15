@@ -1,6 +1,8 @@
 FROM archlinux:latest
 
-RUN bootstrap.sh
+ADD bootstrap.sh /
+RUN bash -c "/bootstrap.sh"
+
 COPY entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
