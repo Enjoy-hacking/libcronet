@@ -65,6 +65,10 @@ case $target in
         namcap "${pkgname}"-*"${PKGEXT}"
         pacman -Qip "${pkgname}"-*"${PKGEXT}"
         pacman -Qlp "${pkgname}"-*"${PKGEXT}"
+	mkdir ../artifacts
+	tar -cazf cronet_build_artifacts.tar.gz src/*/out/Cronet
+	mv cronet_build_artifacts.tar.gz ../artifacts
+	mv "${pkgname}"-*"${PKGEXT}" ../artifacts
         ;;
     run)
         install_deps
