@@ -33,6 +33,9 @@ index a5a8c14..555d746 100644
 +      ]
 +    }
 +
++    if (is_linux) {
++      configs += [ "//build/config/linux:runtime_library" ]
++    }
 +    sources = [ "cronet_global_state_stubs.cc" ]
 +
 +    complete_static_lib = true
