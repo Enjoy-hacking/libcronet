@@ -16,7 +16,7 @@ source=(
 )
 sha256sums=(
   'e348ab2dc4311083e729d714a81e95dd9db108ff71437dde451c97ac939881ce'
-  'c5f1ed22c387d5b0c15d7ba73d5f33aee20f26327249b10d69ecdc82649b790b'
+  '6c49e14e79cc50f95a6f02db262874106b02c20f49998131e2b78f3d2f38ca64'
 )
 
 # Google API keys (see https://www.chromium.org/developers/how-tos/api-keys)
