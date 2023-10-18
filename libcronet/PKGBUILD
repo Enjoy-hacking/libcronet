@@ -132,7 +132,7 @@ build() {
   CXXFLAGS=${CXXFLAGS/-Wp,-D_GLIBCXX_ASSERTIONS}
 
   gn gen out/Cronet --args="${_flags[*]}" --export-compile-commands
-  ninja -C out/Cronet cronet_package
+  ninja -j 4 -C out/Cronet cronet_package
 }
 
 package() {
